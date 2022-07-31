@@ -1,3 +1,4 @@
+from itertools import count
 import openpyxl
 from openpyxl import Workbook
 from openpyxl import load_workbook
@@ -5,7 +6,6 @@ from openpyxl import load_workbook
 lib = load_workbook(filename='lib.xlsx')
 l1 = (lib['l1'])
 
-counter = 1
 '''
 print(l1['A2'].value)
 for n, i in enumerate(l1['A']):
@@ -22,6 +22,26 @@ def number_check(string_1):
             return [string_1, l1['B{}'.format(n+1)].value]
     return False
 
+def file_creation(): #функция для создания файла
+    exel_file = Workbook()
+    file_name = input('введите имя файла: ')
+    global exel_file_name
+    exel_file_name = '{}.xlsx'.format(file_name) #даем название создаваемому файлу
+    global exel_file_1
+    exel_file_1 = exel_file.active #создаем лист exel_file_1
+    title_name = input('введите имя листа: ')
+    if title_name == None: exel_file_1.title = 'basic' #в файле будет называется basic
+    else: exel_file_1.title = '{}'.format(title_name)
+    exel_file_1['A{}'.format(counter)] = 'material'
+    exel_file_1['B{}'.format(counter)] = 'weight 1 meter'
+    exel_file_1['C{}'.format(counter)] = 'number of meters'
+    exel_file_1['D{}'.format(counter)] = 'weight'
+    # тело для записи данных в файл
+
+    #конец записи и сохранение файла
+    #print('Конец записи')
+    #exel_file.save(filename = exel_file_name)
+
 
 while True:
     #0 - выход
@@ -32,6 +52,7 @@ while True:
         print('Выход')
         break
     if input_a == 1:
+        counter = 1 #счетчик строк в создаваемом файле
         exel_file = Workbook()
         exel_file_name = 'exel_file.xlsx' #даем название создаваемому файлу
         exel_file_1 = exel_file.active #создаем лист exel_file_1
@@ -57,6 +78,7 @@ while True:
             input_c = input('введите количество м.п. - ')
             exel_file_1['C{}'.format(counter)] = input_c
             exel_file_1['D{}'.format(counter)] = '=C{}*B{}'.format(counter, counter)
+            counter+=1
         
         print('Конец записи')
         exel_file.save(filename = exel_file_name)
