@@ -1,5 +1,3 @@
-from itertools import count
-import openpyxl
 from openpyxl import Workbook
 from openpyxl import load_workbook
 
@@ -15,27 +13,30 @@ for n, i in enumerate(l1['A']):
 
 
 def number_check(string_1):
-    print('это отправлено в функцию {}'.format(string_1))
     for n, i in enumerate(l1['A']):
-        print(i.value)
         if string_1 == i.value:
             return [string_1, l1['B{}'.format(n+1)].value]
     return False
 
 def file_creation(): #функция для создания файла
+    global exel_file
     exel_file = Workbook()
+
     file_name = input('введите имя файла: ')
     global exel_file_name
-    exel_file_name = '{}.xlsx'.format(file_name) #даем название создаваемому файлу
+    if file_name == '': exel_file_name = 'new_exel_file.xlsx'.format(file_name) #файл будет называться new_exel_file если ничего не введено
+    else: exel_file_name = '{}.xlsx'.format(file_name) #даем название создаваемому файлу
+
     global exel_file_1
     exel_file_1 = exel_file.active #создаем лист exel_file_1
     title_name = input('введите имя листа: ')
-    if title_name == None: exel_file_1.title = 'basic' #в файле будет называется basic
+    if title_name == '': exel_file_1.title = 'basic' #в файле будет называется basic если ничего не введено
     else: exel_file_1.title = '{}'.format(title_name)
-    exel_file_1['A{}'.format(counter)] = 'material'
-    exel_file_1['B{}'.format(counter)] = 'weight 1 meter'
-    exel_file_1['C{}'.format(counter)] = 'number of meters'
-    exel_file_1['D{}'.format(counter)] = 'weight'
+
+    exel_file_1['A{}'.format(counter)] = 'Материал'
+    exel_file_1['B{}'.format(counter)] = 'Вес 1 м.п.'
+    exel_file_1['C{}'.format(counter)] = 'Количество м.п.'
+    exel_file_1['D{}'.format(counter)] = 'Масса'
     # тело для записи данных в файл
 
     #конец записи и сохранение файла
@@ -53,14 +54,7 @@ while True:
         break
     if input_a == 1:
         counter = 1 #счетчик строк в создаваемом файле
-        exel_file = Workbook()
-        exel_file_name = 'exel_file.xlsx' #даем название создаваемому файлу
-        exel_file_1 = exel_file.active #создаем лист exel_file_1
-        exel_file_1.title = 'basic' #в файле будет называется basic
-        exel_file_1['A{}'.format(counter)] = 'material'
-        exel_file_1['B{}'.format(counter)] = 'weight 1 meter'
-        exel_file_1['C{}'.format(counter)] = 'number of meters'
-        exel_file_1['D{}'.format(counter)] = 'weight' 
+        file_creation()
         counter+=1
 
         while True:
