@@ -11,12 +11,41 @@ for n, i in enumerate(l1['A']):
         print(n)
         print(i.value)'''
 
+class metal (object):
+    
+    lib = load_workbook(filename='lib.xlsx')
+    l1 = (lib['l1'])
+    counter = 2 #это счетчик строк
+                #начинается с 2, потому что 1 строка будет занята заголовками
 
+    @classmethod
+    def number_check(cls, string_1): #сравнение введенных данных с библиотекой сечений
+        for n, i in enumerate(l1['A']):
+            if string_1 == i.value:
+                return [string_1, l1['B{}'.format(n+1)].value]
+        return False
+
+    def __init__(self, profile, length):
+        check = metal.number_check(profile)
+        if check != False:
+            self.profile = profile
+            self.unit_weight = check[1]
+            self.length = length
+            global counter
+            self.counter_number = counter
+            counter+=1
+        else:
+            print('Такого профиля в библиотеке нет: {}'.format(profile))
+            print('Или был введен некорректный номер')
+
+
+
+'''
 def number_check(string_1):
     for n, i in enumerate(l1['A']):
         if string_1 == i.value:
             return [string_1, l1['B{}'.format(n+1)].value]
-    return False
+    return False'''
 
 def file_creation(): #функция для создания файла
     global exel_file
