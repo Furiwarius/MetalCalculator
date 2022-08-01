@@ -2,7 +2,7 @@ from openpyxl import Workbook
 from openpyxl import load_workbook
 
 lib = load_workbook(filename='lib.xlsx')
-l1 = (lib['l1'])
+l1 = (lib['l1']) #переменная с листом с именем 'l1'
 
 '''
 print(l1['A2'].value)
@@ -12,65 +12,57 @@ for n, i in enumerate(l1['A']):
         print(i.value)'''
 
 class metal (object):
-    
-    lib = load_workbook(filename='lib.xlsx')
-    l1 = (lib['l1'])
     counter = 2 #это счетчик строк
                 #начинается с 2, потому что 1 строка будет занята заголовками
-
+    metal_list = [] #массив для создания имен профилей
+    '''
     @classmethod
     def number_check(cls, string_1): #сравнение введенных данных с библиотекой сечений
         for n, i in enumerate(l1['A']):
             if string_1 == i.value:
                 return [string_1, l1['B{}'.format(n+1)].value]
-        return False
+        return False'''
 
-    def __init__(self, profile, length):
-        check = metal.number_check(profile)
-        if check != False:
-            self.profile = profile
-            self.unit_weight = check[1]
-            self.length = length
-            global counter
-            self.counter_number = counter
-            counter+=1
-        else:
-            print('Такого профиля в библиотеке нет: {}'.format(profile))
-            print('Или был введен некорректный номер')
+    def __init__(self, profile):
+        self.profile = profile
+        self.unit_weight = 0
+        self.length = 0
+        self.counter_number = metal.counter
+        metal.counter+=1
 
 
 
-'''
-def number_check(string_1):
-    for n, i in enumerate(l1['A']):
+def number_check(string_1): #Проверка профиля
+    for n,i in enumerate(l1['A']):
         if string_1 == i.value:
             return [string_1, l1['B{}'.format(n+1)].value]
-    return False'''
+    return False
 
 def file_creation(): #функция для создания файла
-    global exel_file
     exel_file = Workbook()
-
     file_name = input('введите имя файла: ')
-    global exel_file_name
     if file_name == '': exel_file_name = 'new_exel_file.xlsx'.format(file_name) #файл будет называться new_exel_file если ничего не введено
     else: exel_file_name = '{}.xlsx'.format(file_name) #даем название создаваемому файлу
-
-    global exel_file_1
+    
     exel_file_1 = exel_file.active #создаем лист exel_file_1
     title_name = input('введите имя листа: ')
     if title_name == '': exel_file_1.title = 'basic' #в файле будет называется basic если ничего не введено
     else: exel_file_1.title = '{}'.format(title_name)
 
-    exel_file_1['A{}'.format(counter)] = 'Материал'
-    exel_file_1['B{}'.format(counter)] = 'Вес 1 м.п.'
-    exel_file_1['C{}'.format(counter)] = 'Количество м.п.'
-    exel_file_1['D{}'.format(counter)] = 'Масса'
+    exel_file_1['A1'] = 'Материал'
+    exel_file_1['B1'] = 'Вес 1 м.п.'
+    exel_file_1['C1'] = 'Количество м.п.'
+    exel_file_1['D1'] = 'Масса'
     # тело для записи данных в файл
+    for i in metal.metal_list:
+        exel_file_1['A{}'.format(i.counter_number)] = i.profile
+        exel_file_1['B{}'.format(i.counter_number)] = i.unit_weight
+        exel_file_1['C{}'.format(i.counter_number)] = i.length
+        exel_file_1['D{}'.format(i.counter_number)] = '=C{}*B{}'.format(i.counter_number, i.counter_number)
 
     #конец записи и сохранение файла
-    #print('Конец записи')
-    #exel_file.save(filename = exel_file_name)
+    print('Конец записи')
+    exel_file.save(filename = exel_file_name)
 
 
 while True:
@@ -82,26 +74,22 @@ while True:
         print('Выход')
         break
     if input_a == 1:
-        counter = 1 #счетчик строк в создаваемом файле
-        file_creation()
-        counter+=1
-
         while True:
             input_b = input('Введите нормер сечения - ')
             if input_b == 'конец': break
-            check = number_check(input_b)
+            elif input_b == 'запись':
+                file_creation()
+                break
+            check = number_check(input_b)            
             if check != False:
-                exel_file_1['A{}'.format(counter)] = check[0]
-                exel_file_1['B{}'.format(counter)] = check[1]
+                metal.metal_list.append(check[0]) #проблемы возникнуть не должно, тк мы сразу же после проверки добавляем элемент в список
+                metal.metal_list[len(metal.metal_list)-1] = metal(metal.metal_list[len(metal.metal_list)-1])
+                metal.metal_list[len(metal.metal_list)-1].unit_weight = check[1]
             else:
                 print('Такого номер сечения нет в библиотеке - {}'.format(input_b))
                 print('Или вы ввели некоректный номер')
                 continue
-
             input_c = input('введите количество м.п. - ')
-            exel_file_1['C{}'.format(counter)] = input_c
-            exel_file_1['D{}'.format(counter)] = '=C{}*B{}'.format(counter, counter)
-            counter+=1
+            metal.metal_list[len(metal.metal_list)-1].length = input_c
         
-        print('Конец записи')
-        exel_file.save(filename = exel_file_name)
+        
