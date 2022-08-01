@@ -24,10 +24,10 @@ class metal (object):
         return False'''
 
     def __init__(self, profile):
-        self.profile = profile
-        self.unit_weight = 0
-        self.length = 0
-        self.counter_number = metal.counter
+        self.profile = profile                    #обязательным аргументом для создания класса является номер профиля 
+        self.unit_weight = 0                      #задается после создания экземпляра
+        self.length = 0                           #задается после создания экземпляра
+        self.counter_number = metal.counter       #каждому экземпляру задается номер строки
         metal.counter+=1
 
 
@@ -36,9 +36,12 @@ def number_check(string_1): #Проверка профиля
     for n,i in enumerate(l1['A']):
         if string_1 == i.value:
             return [string_1, l1['B{}'.format(n+1)].value]
+        
+    #есть идея переноса в класс в функцию init
+    #при неверном номере профиля будет запрашивать новый
     return False
 
-def file_creation(): #функция для создания файла
+def file_creation(): #функция для создания файла, позднее перекочует в класс metal
     exel_file = Workbook()
     file_name = input('введите имя файла: ')
     if file_name == '': exel_file_name = 'new_exel_file.xlsx'.format(file_name) #файл будет называться new_exel_file если ничего не введено
