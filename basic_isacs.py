@@ -82,7 +82,7 @@ while True:
             if input_b == 'конец': break
             elif input_b == 'показ':
                 for i in metal.metal_list:
-                    print('№{} -{} м.п. весит - {}'.format(i.profile, i.length, i.unit_weight))
+                    print('№ {} - {} м.п. весит - {} кг'.format(i.profile, i.length, i.unit_weight))
                 continue
             elif input_b == 'запись':
                 file_creation()
