@@ -17,7 +17,7 @@ class metal (object):
     metal_list = [] #массив для создания имен профилей
     '''
     @classmethod
-    def number_check(cls, string_1): #сравнение введенных данных с библиотекой сечений
+    def number_check(self, string_1): #сравнение введенных данных с библиотекой сечений
         for n, i in enumerate(l1['A']):
             if string_1 == i.value:
                 return [string_1, l1['B{}'.format(n+1)].value]
@@ -80,6 +80,10 @@ while True:
         while True:
             input_b = input('Введите нормер сечения - ')
             if input_b == 'конец': break
+            elif input_b == 'показ':
+                for i in metal.metal_list:
+                    print('№{} -{} м.п. весит - {}'.format(i.profile, i.length, i.unit_weight))
+                continue
             elif input_b == 'запись':
                 file_creation()
                 break
