@@ -4,42 +4,39 @@ from openpyxl import load_workbook
 lib = load_workbook(filename='lib.xlsx')
 l1 = (lib['l1']) #переменная с листом с именем 'l1'
 
-'''
-print(l1['A2'].value)
-for n, i in enumerate(l1['A']):
-    if i != None:
-        print(n)
-        print(i.value)'''
 
 class metal (object):
     counter = 2 #это счетчик строк
                 #начинается с 2, потому что 1 строка будет занята заголовками
     metal_list = [] #массив для создания имен профилей
-    '''
-    @classmethod
-    def number_check(self, string_1): #сравнение введенных данных с библиотекой сечений
-        for n, i in enumerate(l1['A']):
-            if string_1 == i.value:
-                return [string_1, l1['B{}'.format(n+1)].value]
-        return False'''
+    
+    @staticmethod
+    def number_check(string_1): #сравнение введенных данных с библиотекой сечений
+        sent_string = string_1
+        send = []
+        while True:
+            for n, i in enumerate(l1['A']):
+                if sent_string == i.value:
+                    send = [sent_string, l1['B{}'.format(n+1)].value]
+            if len(send) == 0:
+                print('Введенный номер профиля отсутствует в библиотеке - {}'.format(string_1)) 
+                sent_string = input('Введите исправлненный номер профиля - ') #ДОБАВИТЬ ВЫХОД из цикла В ДАЛЬНЕЙШЕМ ПОСЛЕ ТЕСТА
+            else:
+                return send
+        
 
     def __init__(self, profile):
-        self.profile = profile                    #обязательным аргументом для создания класса является номер профиля 
-        self.unit_weight = 0                      #задается после создания экземпляра
-        self.length = 0                           #задается после создания экземпляра
+        verification = metal.number_check(profile)
+        self.profile = verification[0]                    #обязательным аргументом для создания класса является номер профиля 
+        self.unit_weight = verification[1]                      #задается после создания экземпляра
+        self.length = input('Введите длину детали: ')                           #задается после создания экземпляра
         self.counter_number = metal.counter       #каждому экземпляру задается номер строки
         metal.counter+=1
+    
+    def __del__(self):
+        pass
 
 
-
-def number_check(string_1): #Проверка профиля
-    for n,i in enumerate(l1['A']):
-        if string_1 == i.value:
-            return [string_1, l1['B{}'.format(n+1)].value]
-        
-    #есть идея переноса в класс в функцию init
-    #при неверном номере профиля будет запрашивать новый
-    return False
 
 def file_creation(): #функция для создания файла, позднее перекочует в класс metal
     exel_file = Workbook()
@@ -87,16 +84,7 @@ while True:
             elif input_b == 'запись':
                 file_creation()
                 break
-            check = number_check(input_b)            
-            if check != False:
-                metal.metal_list.append(check[0]) #проблемы возникнуть не должно, тк мы сразу же после проверки добавляем элемент в список
-                metal.metal_list[len(metal.metal_list)-1] = metal(metal.metal_list[len(metal.metal_list)-1])
-                metal.metal_list[len(metal.metal_list)-1].unit_weight = check[1]
-            else:
-                print('Такого номер сечения нет в библиотеке - {}'.format(input_b))
-                print('Или вы ввели некоректный номер')
-                continue
-            input_c = input('введите количество м.п. - ')
-            metal.metal_list[len(metal.metal_list)-1].length = input_c
+            check = metal(input_b)
+            metal.metal_list.append(check)
         
         
