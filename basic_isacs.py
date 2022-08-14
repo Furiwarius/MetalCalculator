@@ -19,13 +19,21 @@ class metal (object):
             for n, i in enumerate(l1['A']):
                 if sent_string == i.value:
                     send = [sent_string, l1['B{}'.format(n+1)].value]
+                    continue
             if len(send) == 0:
-                print('Введенный номер профиля отсутствует в библиотеке - {}'.format(string_1)) 
-                sent_string = input('Введите исправлненный номер профиля - ') 
-                if sent_string == 'отмена':
-                    return False
+                print('Введенный номер профиля отсутствует в библиотеке - {}'.format(sent_string)) 
+                sent_string = input('Введите исправлненный номер профиля - ').upper() 
+                if sent_string == 'ОТМЕНА':
+                    return False                
             else:
                 return send
+    @staticmethod
+    def data_change (number):
+        for n, i in enumerate(metal.metal_list):
+            if int(number) == n+1:
+                input_1 = input("Введите нужное количество метров - ")
+                i.length = metal.length_check(input_1)
+                print("Выполнено")
 
     @staticmethod
     def length_check(string_1): #проверка введенного количества на наличие лишних символов
@@ -101,7 +109,7 @@ while True:
     print('1 - Узнать вес нужного количеста заданного номера')
     print('2 - Узнать длину контура профиля')
     try:
-        input_a = int(input('введите номер операции - '))   #ДОБАВИТЬ ОБРАБОТКУ ИСКЛЮЧЕНИЙ
+        input_a = int(input('введите номер операции - '))   
     except ValueError:
         print('--------------------------------------------------')
         print('Введен некорректный номер операции - {}'.format(input_a)) 
@@ -117,28 +125,29 @@ while True:
                 for i in metal.metal_list:
                     print('№{} {} - {} м.п., 1 м весит - {} кг, общая масса - {}'.format(i.position_number ,i.profile, i.length, i.unit_weight, i.unit_weight*i.length))
                 continue
+
+
             elif input_b.lower() == 'изменить':
                 print('Введите "удалить", чтобы удалить номер профиля из списка')
                 print('Введите "изменить", чтобы изменить количество материала (длину)')
                 input_c = input('Введите действие - ').lower()
-                if input_c == 'удалить':
+                if input_c == 'удалить':                                  #НЕ РАБОТАЕТ
                     input_d = input('Введите номер позиции удаляемого элемента - ')
                     for n, i in enumerate(metal.metal_list):
                         if i.position_number == input_c:
                             del(i) #Добавить функцию для добавления или изменения
                             print('Выполнено')
                     continue
-                if input_c == 'изменить':
-                    input_d = input('Введите номер позиции изменяемого элемента - ').upper()
-                    for i in metal.metal_list:
-                        if i.position_number == input_d:
-                            input_e = input('Введите новое количество - ')
-                            if metal.length_check(input_e) != False: i.length = float(input_e)
-                            print('Изменения внесены')
-                            continue
+
+                if input_c == 'изменить':                                
+                    input_d = input('Введите номер позиции изменяемого элемента - ')
+                    metal.data_change(input_d)
+                    continue
+
                 if input_c == 'отмена':
                     print('Отмена действия')
                     continue
+
             elif input_b.lower() == 'запись':
                 file_creation()
                 break
