@@ -48,6 +48,24 @@ class metal (object):
                 except ValueError:
                     print('Введено число в сочетании с другими символами - {}'.format(sent_string))
                     sent_string = input('Введите исправленное число: ')
+                    
+    @staticmethod
+    def delited (number):
+        for n, i in enumerate(metal.metal_list):
+            if int(number) == n+1:
+                while True:
+                    input_1 = input("Вы действительно хотите удалить этот элемент? - №{} {} длиной {} м.п. - ".format(i.position_number ,i.profile, i.length)).lower()
+                    if input_1 == "да":
+                        metal.metal_list.remove(i)
+                        print("Выполнено")
+                        return
+                    elif input_1 == "нет":
+                        print("Отмена")
+                        return
+                    else:
+                        print("Введен некорректный ответ - {}".format(input_1))
+        print("Такого номера позиции нет - {}".format(number))
+        
         
 
     def __init__(self, profile):
@@ -119,6 +137,13 @@ while True:
         break
     if input_a == 1:
         while True:
+            print('--------------------------------------------------')
+            print("№ сечения для дальнейшей работы с ним")
+            print("конец - конец работы в операции 1")
+            print("показ - для просмотра добавленных номеров сечений")
+            print("изменить: изменать - для изменения длины детали, удалить - для удаления элемента")
+            print("запись - для записи добавленных элементов в таблицу EXEL")
+            
             input_b = input('Введите нормер сечения или другое - ')
             if input_b.lower() == 'конец': break
             elif input_b.lower() == 'показ':
@@ -130,13 +155,12 @@ while True:
             elif input_b.lower() == 'изменить':
                 print('Введите "удалить", чтобы удалить номер профиля из списка')
                 print('Введите "изменить", чтобы изменить количество материала (длину)')
+                print('Введите "отмена" для отмены данного действия')
                 input_c = input('Введите действие - ').lower()
+                
                 if input_c == 'удалить':                                  #НЕ РАБОТАЕТ
                     input_d = input('Введите номер позиции удаляемого элемента - ')
-                    for n, i in enumerate(metal.metal_list):
-                        if i.position_number == input_c:
-                            del(i) #Добавить функцию для добавления или изменения
-                            print('Выполнено')
+                    metal.delited(input_d)
                     continue
 
                 if input_c == 'изменить':                                
@@ -147,6 +171,7 @@ while True:
                 if input_c == 'отмена':
                     print('Отмена действия')
                     continue
+
 
             elif input_b.lower() == 'запись':
                 file_creation()
