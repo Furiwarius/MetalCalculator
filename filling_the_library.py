@@ -21,9 +21,31 @@ gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)   # перевод изображе
 
 ret, thresh1 = cv2.threshold(gray, 0, 255, cv2.THRESH_OTSU |          # перевод изображения в бинарное, то есть в бело-черное
                                           cv2.THRESH_BINARY_INV) 
-cv2.imwrite('threshold_image.jpg',thresh1)                           # сохранение в текущем каталоге
+cv2.imwrite('images/threshold_image.jpg',thresh1)                           # сохранение в текущем каталоге
 
-rect_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (4, 4))   # задаем размер поиска слов, увеличивает точность поиска слов
+rect_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))   # задаем размер поиска слов, увеличивает точность поиска слов
 
 dilation = cv2.dilate(thresh1, rect_kernel, iterations = 3) # с каждым циклом итерации увеличивается рамка 
-cv2.imwrite('dilation_image.jpg',dilation)                           # сохранение в текущем каталоге
+cv2.imwrite('images/dilation_image.jpg',dilation)                           # сохранение в текущем каталоге
+
+contours, hierarchy = cv2.findContours(dilation, cv2.RETR_EXTERNAL,
+                                            cv2.CHAIN_APPROX_NONE)
+im2 = img.copy()
+
+for cnt in contours:
+    x, y, w, h = cv2.boundingRect(cnt)
+    #print("x - {}, y - {}, w - {}, h- {}".format(x, y, w, h))
+    #if x<800 or x>1100:continue
+     
+    # Рисуем ограничительную рамку на текстовой области
+    rect=cv2.rectangle(im2, (x, y), (x + w, y + h), (0, 255, 0), 2)
+     
+    # Обрезаем область ограничительной рамки
+    cropped = im2[y:y + h, x:x + w]
+    
+    cv2.imwrite('images/rectanglebox.jpg',rect)
+     
+    # Использование tesseract на обрезанной области изображения для  получения текста
+    text = pytesseract.image_to_string(cropped)
+     
+    print("value - {}".format(text))
