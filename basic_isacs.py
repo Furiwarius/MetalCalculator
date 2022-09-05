@@ -1,8 +1,9 @@
 from openpyxl import Workbook
-from openpyxl import load_workbook
+import pandas as pd
 
-lib = load_workbook(filename='lib.xlsx')
-l1 = (lib['l1']) #переменная с листом с именем 'l1'
+df = pd.read_csv(r'MetalLibrary\tableChannel.csv', sep=',') #швеллера 
+#lib = load_workbook(filename='lib.xlsx')
+#l1 = (lib['l1']) #переменная с листом с именем 'l1'
 
 
 class metal (object):
@@ -13,17 +14,16 @@ class metal (object):
     
     @staticmethod
     def number_check(string_1): #сравнение введенных данных с библиотекой сечений
-        sent_string = string_1
         send = []
         while True:
-            for n, i in enumerate(l1['A']):
-                if sent_string == i.value:
-                    send = [sent_string, l1['B{}'.format(n+1)].value]
+            for n, i in enumerate(df['Профиль']):
+                if string_1 == i:
+                    send = [string_1, df['M, кг'][n]]
                     continue
             if len(send) == 0:
-                print('Введенный номер профиля отсутствует в библиотеке - {}'.format(sent_string)) 
-                sent_string = input('Введите исправлненный номер профиля - ').upper() 
-                if sent_string == 'ОТМЕНА':
+                print('Введенный номер профиля отсутствует в библиотеке - {}'.format(string_1)) 
+                string_1 = input('Введите исправлненный номер профиля - ').upper() 
+                if string_1 == 'ОТМЕНА':
                     return False                
             else:
                 return send
@@ -50,7 +50,7 @@ class metal (object):
                     sent_string = input('Введите исправленное число: ')
                     
     @staticmethod
-    def delited (number):
+    def delited (number):  #Удаление 
         for n, i in enumerate(metal.metal_list):
             if int(number) == n+1:
                 while True:
@@ -136,14 +136,14 @@ while True:
         print('Выход')
         break
     if input_a == 1:
-        while True:
-            print('--------------------------------------------------')
-            print("№ сечения для дальнейшей работы с ним")
-            print("конец - конец работы в операции 1")
-            print("показ - для просмотра добавленных номеров сечений")
-            print("изменить: изменать - для изменения длины детали, удалить - для удаления элемента")
-            print("запись - для записи добавленных элементов в таблицу EXEL")
-
+        print('--------------------------------------------------')
+        print("№ сечения для дальнейшей работы с ним")
+        print("конец - конец работы в операции 1")
+        print("показ - для просмотра добавленных номеров сечений")
+        print("изменить: изменать - для изменения длины детали, удалить - для удаления элемента")
+        print("запись - для записи добавленных элементов в таблицу EXEL")
+        
+        while True:  
             input_b = input('Введите нормер сечения или другое - ')
             if input_b.lower() == 'конец': break
             elif input_b.lower() == 'показ':
