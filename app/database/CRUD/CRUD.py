@@ -14,6 +14,13 @@ class metalCRUD():
     Класс для взаимодействия с бд
     '''
 
+
+    def get_name_profiles(self) -> list:
+        '''
+        Получить список названий профилей
+        '''
+
+
     def get_by_number(self, number:str) -> Metal:
         '''
         Получить метал по номеру профиля
