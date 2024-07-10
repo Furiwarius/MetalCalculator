@@ -1,5 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget
+from app.GUI.drop_down_list import DropDownList
+
 
 # В дальнейшем будет удалено, тк настраиваться приложение будет через файл
 setting = {"title":"MetalCalculator", "resize":(250, 150), "move":(300,300)}
@@ -49,6 +51,8 @@ class Window():
         '''
         Показать окно
         '''
-        self.window.show()
 
-a = AppGUI()
+        ddl = DropDownList(self.window)
+        # Передается список профилей
+        ddl.setting()
+        self.window.show()
